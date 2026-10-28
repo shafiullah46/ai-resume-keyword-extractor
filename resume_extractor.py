@@ -1,10 +1,14 @@
 import os
-from openai import OpenAI
+from openai import OpenAI, APIConnectionError
 
-# Initialize the OpenAI client with environment variables
+# Retrieve API credentials and custom base URL if available
+api_key = os.environ.get('OPENAI_API_KEY', 'dummy_key')
+base_url = os.environ.get('OPENAI_API_BASE')
+
+# Initialize OpenAI Client (handles custom endpoints like KodeKloud or standard OpenAI)
 client = OpenAI(
-    api_key=os.environ.get('OPENAI_API_KEY'),
-    base_url=os.environ.get('OPENAI_API_BASE')
+    api_key=api_key,
+    base_url=base_url if base_url else None
 )
 
 def extract_keywords(text: str) -> str:
@@ -19,18 +23,21 @@ def extract_keywords(text: str) -> str:
         f"Resume Paragraph:\n{text}"
     )
     
-    response = client.chat.completions.create(
-        model="gpt-5.6-luna",
-        messages=[
-            {"role": "user", "content": prompt}
-        ],
-        max_tokens=100,
-        temperature=0
-    )
+    # Use lab model if custom base URL exists, else default to standard OpenAI model
+    model_name = "gpt-5.6-luna" if base_url else "gpt-4o-mini"
     
-    # Extract the clean string response
-    keywords = response.choices[0].message.content.strip()
-    return keywords
+    try:
+        response = client.chat.completions.create(
+            model=model_name,
+            messages=[
+                {"role": "user", "content": prompt}
+            ],
+            max_tokens=100,
+            temperature=0
+        )
+        return response.choices[0].message.content.strip()
+    except APIConnectionError as e:
+        return f"[Error] Could not connect to API endpoint ({base_url or 'api.openai.com'}). Ensure valid OPENAI_API_KEY and OPENAI_API_BASE environment variables are set."
 
 if __name__ == "__main__":
     resume_text = "Experienced DevOps engineer skilled in Python, Kubernetes, Docker, CI/CD pipelines, and cloud automation."
