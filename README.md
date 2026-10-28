@@ -34,3 +34,40 @@ ai-resume-keyword-extractor/
 ├── requirements.txt        # Project dependencies
 ├── .gitignore              # Ignored files (venv, cache, env)
 └── README.md               # Project documentation
+Installation & Setup
+1. Clone the Repository
+git clone [https://github.com/shafiullah46/ai-resume-keyword-extractor.git](https://github.com/shafiullah46/ai-resume-keyword-extractor.git)
+cd ai-resume-keyword-extractor
+
+2. Set Up Virtual Environment
+python -m venv venv
+# On Windows PowerShell:
+.\venv\Scripts\activate
+# On Linux/macOS:
+source venv/bin/activate
+
+3. Install Dependencies
+pip install -r requirements.txt
+
+4. Configure Environment Variables
+Set your API key and custom base URL (if using private proxy/endpoints):
+
+Windows PowerShell:
+$env:OPENAI_API_KEY="your_api_key_here"
+$env:OPENAI_API_BASE="your_base_url_here" # Optional for standard OpenAI
+Linux / macOS:
+export OPENAI_API_KEY="your_api_key_here"
+export OPENAI_API_BASE="your_base_url_here"
+
+💻 Usage Example
+Run the main extraction script:
+python resume_extractor.py
+Input Paragraph:
+"Experienced DevOps engineer skilled in Python, Kubernetes, Docker, CI/CD pipelines, and cloud automation."
+
+Output:
+DevOps, Python, Kubernetes, Docker, CI/CD
+👨‍💻 Author
+Shafiullah Niazi
+
+Deputy Director ML/DevOps | Cloud & AI Infrastructure Specialist
